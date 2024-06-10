@@ -1,0 +1,32 @@
+<%= form_with(model: discount_campaign, local: true) do |form| %>
+  <% if discount_campaign.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(discount_campaign.errors.count, "error") %> prohibited this discount_campaign from being saved:</h2>
+
+      <ul>
+        <% discount_campaign.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :product_id %>
+    <%= form.collection_select :product_id, @products, :id, :name, {}, { class: 'form-control' } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :discount_price %>
+    <%= form.number_field :discount_price, step: 0.01, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.text_field :status, class: 'form-control' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>

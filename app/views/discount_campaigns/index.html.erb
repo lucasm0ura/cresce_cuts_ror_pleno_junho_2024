@@ -1,0 +1,30 @@
+<!-- app/views/discount_campaigns/index.html.erb -->
+<div class="container">
+  <h1 class="mt-5">Discount Campaigns</h1>
+
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Original Price</th>
+        <th>Discounted Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @discount_campaigns.each do |campaign| %>
+        <tr>
+          <td><%= campaign.product.name %></td>
+          <td><%= campaign.original_price %></td>
+          <td><%= campaign.discounted_price %></td>
+          <td><%= campaign.status %></td>
+          <td>
+            <%= link_to 'Show', discount_campaign_path(campaign), class: "btn btn-primary btn-sm me-2" %>
+            <%= link_to 'Edit', edit_discount_campaign_path(campaign), class: "btn btn-secondary btn-sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

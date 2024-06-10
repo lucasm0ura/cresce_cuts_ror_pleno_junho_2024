@@ -1,0 +1,23 @@
+<!-- app/views/discount_campaigns/edit.html.erb -->
+<div class="container">
+  <h1 class="mt-5">Edit Discount Campaign</h1>
+
+  <%= form_with model: @discount_campaign, url: discount_campaign_path(@discount_campaign), method: :patch, class: "mt-3" do |form| %>
+    <div class="mb-3">
+      <%= form.label :original_price, class: "form-label" %>
+      <%= form.number_field :original_price, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :discounted_price, class: "form-label" %>
+      <%= form.number_field :discounted_price, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :status, class: "form-label" %>
+      <%= form.select :status, [['Active', 'active'], ['Expired', 'expired']], class: "form-select" %>
+    </div>
+
+    <%= form.submit 'Update Discount Campaign', class: "btn btn-primary" %>
+  <% end %>
+</div>

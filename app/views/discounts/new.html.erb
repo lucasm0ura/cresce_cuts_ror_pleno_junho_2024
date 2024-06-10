@@ -1,0 +1,23 @@
+<!-- app/views/discounts/new.html.erb -->
+<div class="container">
+  <h1 class="mt-5">New Discount</h1>
+
+  <%= form_with model: @discount, url: discounts_path, method: :post, class: "mt-3" do |form| %>
+    <div class="mb-3">
+      <%= form.label :product_id, class: "form-label" %>
+      <%= form.select :product_id, Product.all.map { |product| [product.name, product.id] }, class: "form-select" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :discount_type, class: "form-label" %>
+      <%= form.select :discount_type, [['Percentage', 'percentage'], ['Amount', 'amount']], class: "form-select" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :discount_amount, class: "form-label" %>
+      <%= form.number_field :discount_amount, class: "form-control" %>
+    </div>
+
+    <%= form.submit 'Create Discount', class: "btn btn-primary" %>
+  <% end %>
+</div>

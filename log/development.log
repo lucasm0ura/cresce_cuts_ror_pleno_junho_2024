@@ -1,0 +1,502 @@
+  [1m[35m (209.6ms)[0m  [1m[35mCREATE DATABASE "discount_campaign_app_development" ENCODING = 'unicode'[0m
+  [1m[35m (52.6ms)[0m  [1m[35mCREATE DATABASE "discount_campaign_app_test" ENCODING = 'unicode'[0m
+  [1m[35m (15.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3155292796062269940)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (6.3ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (6.6ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-06-09 01:03:36.209723', '2024-06-09 01:03:36.209726') RETURNING "key"[0m
+Migrating to CreateProducts (20240609010306)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (15.8ms)[0m  [1m[35mCREATE TABLE "products" ("id" bigserial primary key, "name" character varying, "description" text, "price" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240609010306') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateDiscountCampaigns (20240609010320)
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (18.2ms)[0m  [1m[35mCREATE TABLE "discount_campaigns" ("id" bigserial primary key, "product_id" bigint NOT NULL, "discount_price" decimal, "status" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_e52f19b782"
+FOREIGN KEY ("product_id")
+  REFERENCES "products" ("id")
+)[0m
+  [1m[35m (2.1ms)[0m  [1m[35mCREATE INDEX "index_discount_campaigns_on_product_id" ON "discount_campaigns" ("product_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240609010320') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateDiscountHistories (20240609010328)
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.8ms)[0m  [1m[35mCREATE TABLE "discount_histories" ("id" bigserial primary key, "discount_campaign_id" bigint NOT NULL, "change_date" timestamp(6), "user" character varying, "old_discount_price" decimal, "new_discount_price" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_1bd040a2f4"
+FOREIGN KEY ("discount_campaign_id")
+  REFERENCES "discount_campaigns" ("id")
+)[0m
+  [1m[35m (2.1ms)[0m  [1m[35mCREATE INDEX "index_discount_histories_on_discount_campaign_id" ON "discount_histories" ("discount_campaign_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240609010328') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT pg_advisory_unlock(3155292796062269940)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mProduct Load (3.6ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"], ["description", "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday"], ["price", "109.95"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (3.4ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"], ["description", "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday"], ["price", "109.95"], ["created_at", "2024-06-09 01:07:06.020017"], ["updated_at", "2024-06-09 01:07:06.020017"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.3ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Mens Casual Premium Slim Fit T-Shirts "], ["description", "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket."], ["price", "22.3"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (1.0ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Mens Casual Premium Slim Fit T-Shirts "], ["description", "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket."], ["price", "22.3"], ["created_at", "2024-06-09 01:07:06.035041"], ["updated_at", "2024-06-09 01:07:06.035041"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Mens Cotton Jacket"], ["description", "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day."], ["price", "55.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.8ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Mens Cotton Jacket"], ["description", "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day."], ["price", "55.99"], ["created_at", "2024-06-09 01:07:06.038410"], ["updated_at", "2024-06-09 01:07:06.038410"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Mens Casual Slim Fit"], ["description", "The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description."], ["price", "15.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.8ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Mens Casual Slim Fit"], ["description", "The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description."], ["price", "15.99"], ["created_at", "2024-06-09 01:07:06.041238"], ["updated_at", "2024-06-09 01:07:06.041238"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet"], ["description", "From our Legends Collection, the Naga was inspired by the mythical water dragon that protects the ocean's pearl. Wear facing inward to be bestowed with love and abundance, or outward for protection."], ["price", "695.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet"], ["description", "From our Legends Collection, the Naga was inspired by the mythical water dragon that protects the ocean's pearl. Wear facing inward to be bestowed with love and abundance, or outward for protection."], ["price", "695.0"], ["created_at", "2024-06-09 01:07:06.044062"], ["updated_at", "2024-06-09 01:07:06.044062"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.4ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Solid Gold Petite Micropave "], ["description", "Satisfaction Guaranteed. Return or exchange any order within 30 days.Designed and sold by Hafeez Center in the United States. Satisfaction Guaranteed. Return or exchange any order within 30 days."], ["price", "168.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Solid Gold Petite Micropave "], ["description", "Satisfaction Guaranteed. Return or exchange any order within 30 days.Designed and sold by Hafeez Center in the United States. Satisfaction Guaranteed. Return or exchange any order within 30 days."], ["price", "168.0"], ["created_at", "2024-06-09 01:07:06.047089"], ["updated_at", "2024-06-09 01:07:06.047089"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "White Gold Plated Princess"], ["description", "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day..."], ["price", "9.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "White Gold Plated Princess"], ["description", "Classic Created Wedding Engagement Solitaire Diamond Promise Ring for Her. Gifts to spoil your love more for Engagement, Wedding, Anniversary, Valentine's Day..."], ["price", "9.99"], ["created_at", "2024-06-09 01:07:06.049870"], ["updated_at", "2024-06-09 01:07:06.049870"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Pierced Owl Rose Gold Plated Stainless Steel Double"], ["description", "Rose Gold Plated Double Flared Tunnel Plug Earrings. Made of 316L Stainless Steel"], ["price", "10.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Pierced Owl Rose Gold Plated Stainless Steel Double"], ["description", "Rose Gold Plated Double Flared Tunnel Plug Earrings. Made of 316L Stainless Steel"], ["price", "10.99"], ["created_at", "2024-06-09 01:07:06.052583"], ["updated_at", "2024-06-09 01:07:06.052583"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.8ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "WD 2TB Elements Portable External Hard Drive - USB 3.0 "], ["description", "USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC Performance High Capacity; Compatibility Formatted NTFS for Windows 10, Windows 8.1, Windows 7; Reformatting may be required for other operating systems; Compatibility may vary depending on user’s hardware configuration and operating system"], ["price", "64.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "WD 2TB Elements Portable External Hard Drive - USB 3.0 "], ["description", "USB 3.0 and USB 2.0 Compatibility Fast data transfers Improve PC Performance High Capacity; Compatibility Formatted NTFS for Windows 10, Windows 8.1, Windows 7; Reformatting may be required for other operating systems; Compatibility may vary depending on user’s hardware configuration and operating system"], ["price", "64.0"], ["created_at", "2024-06-09 01:07:06.056113"], ["updated_at", "2024-06-09 01:07:06.056113"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s"], ["description", "Easy upgrade for faster boot up, shutdown, application load and response (As compared to 5400 RPM SATA 2.5” hard drive; Based on published specifications and internal benchmarking tests using PCMark vantage scores) Boosts burst write performance, making it ideal for typical PC workloads The perfect balance of performance and reliability Read/write speeds of up to 535MB/s/450MB/s (Based on internal testing; Performance may vary depending upon drive capacity, host device, OS and application.)"], ["price", "109.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (1.0ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s"], ["description", "Easy upgrade for faster boot up, shutdown, application load and response (As compared to 5400 RPM SATA 2.5” hard drive; Based on published specifications and internal benchmarking tests using PCMark vantage scores) Boosts burst write performance, making it ideal for typical PC workloads The perfect balance of performance and reliability Read/write speeds of up to 535MB/s/450MB/s (Based on internal testing; Performance may vary depending upon drive capacity, host device, OS and application.)"], ["price", "109.0"], ["created_at", "2024-06-09 01:07:06.058819"], ["updated_at", "2024-06-09 01:07:06.058819"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5"], ["description", "3D NAND flash are applied to deliver high transfer speeds Remarkable transfer speeds that enable faster bootup and improved overall system performance. The advanced SLC Cache Technology allows performance boost and longer lifespan 7mm slim design suitable for Ultrabooks and Ultra-slim notebooks. Supports TRIM command, Garbage Collection technology, RAID, and ECC (Error Checking & Correction) to provide the optimized performance and enhanced reliability."], ["price", "109.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5"], ["description", "3D NAND flash are applied to deliver high transfer speeds Remarkable transfer speeds that enable faster bootup and improved overall system performance. The advanced SLC Cache Technology allows performance boost and longer lifespan 7mm slim design suitable for Ultrabooks and Ultra-slim notebooks. Supports TRIM command, Garbage Collection technology, RAID, and ECC (Error Checking & Correction) to provide the optimized performance and enhanced reliability."], ["price", "109.0"], ["created_at", "2024-06-09 01:07:06.061689"], ["updated_at", "2024-06-09 01:07:06.061689"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive"], ["description", "Expand your PS4 gaming experience, Play anywhere Fast and easy, setup Sleek design with high capacity, 3-year manufacturer's limited warranty"], ["price", "114.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "WD 4TB Gaming Drive Works with Playstation 4 Portable External Hard Drive"], ["description", "Expand your PS4 gaming experience, Play anywhere Fast and easy, setup Sleek design with high capacity, 3-year manufacturer's limited warranty"], ["price", "114.0"], ["created_at", "2024-06-09 01:07:06.064458"], ["updated_at", "2024-06-09 01:07:06.064458"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin"], ["description", "21. 5 inches Full HD (1920 x 1080) widescreen IPS display And Radeon free Sync technology. No compatibility for VESA Mount Refresh Rate: 75Hz - Using HDMI port Zero-frame design | ultra-thin | 4ms response time | IPS panel Aspect ratio - 16: 9. Color Supported - 16. 7 million colors. Brightness - 250 nit Tilt angle -5 degree to 15 degree. Horizontal viewing angle-178 degree. Vertical viewing angle-178 degree 75 hertz"], ["price", "599.0"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Acer SB220Q bi 21.5 inches Full HD (1920 x 1080) IPS Ultra-Thin"], ["description", "21. 5 inches Full HD (1920 x 1080) widescreen IPS display And Radeon free Sync technology. No compatibility for VESA Mount Refresh Rate: 75Hz - Using HDMI port Zero-frame design | ultra-thin | 4ms response time | IPS panel Aspect ratio - 16: 9. Color Supported - 16. 7 million colors. Brightness - 250 nit Tilt angle -5 degree to 15 degree. Horizontal viewing angle-178 degree. Vertical viewing angle-178 degree 75 hertz"], ["price", "599.0"], ["created_at", "2024-06-09 01:07:06.067197"], ["updated_at", "2024-06-09 01:07:06.067197"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor (LC49HG90DMNXZA) – Super Ultrawide Screen QLED "], ["description", "49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR with dual 27 inch screen side by side QUANTUM DOT (QLED) TECHNOLOGY, HDR support and factory calibration provides stunningly realistic and accurate color and contrast 144HZ HIGH REFRESH RATE and 1ms ultra fast response time work to eliminate motion blur, ghosting, and reduce input lag"], ["price", "999.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Samsung 49-Inch CHG90 144Hz Curved Gaming Monitor (LC49HG90DMNXZA) – Super Ultrawide Screen QLED "], ["description", "49 INCH SUPER ULTRAWIDE 32:9 CURVED GAMING MONITOR with dual 27 inch screen side by side QUANTUM DOT (QLED) TECHNOLOGY, HDR support and factory calibration provides stunningly realistic and accurate color and contrast 144HZ HIGH REFRESH RATE and 1ms ultra fast response time work to eliminate motion blur, ghosting, and reduce input lag"], ["price", "999.99"], ["created_at", "2024-06-09 01:07:06.069942"], ["updated_at", "2024-06-09 01:07:06.069942"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "BIYLACLESEN Women's 3-in-1 Snowboard Jacket Winter Coats"], ["description", "Note:The Jackets is US standard size, Please choose size as your usual wear Material: 100% Polyester; Detachable Liner Fabric: Warm Fleece. Detachable Functional Liner: Skin Friendly, Lightweigt and Warm.Stand Collar Liner jacket, keep you warm in cold weather. Zippered Pockets: 2 Zippered Hand Pockets, 2 Zippered Pockets on Chest (enough to keep cards or keys)and 1 Hidden Pocket Inside.Zippered Hand Pockets and Hidden Pocket keep your things secure. Humanized Design: Adjustable and Detachable Hood and Adjustable cuff to prevent the wind and water,for a comfortable fit. 3 in 1 Detachable Design provide more convenience, you can separate the coat and inner as needed, or wear it together. It is suitable for different season and help you adapt to different climates"], ["price", "56.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "BIYLACLESEN Women's 3-in-1 Snowboard Jacket Winter Coats"], ["description", "Note:The Jackets is US standard size, Please choose size as your usual wear Material: 100% Polyester; Detachable Liner Fabric: Warm Fleece. Detachable Functional Liner: Skin Friendly, Lightweigt and Warm.Stand Collar Liner jacket, keep you warm in cold weather. Zippered Pockets: 2 Zippered Hand Pockets, 2 Zippered Pockets on Chest (enough to keep cards or keys)and 1 Hidden Pocket Inside.Zippered Hand Pockets and Hidden Pocket keep your things secure. Humanized Design: Adjustable and Detachable Hood and Adjustable cuff to prevent the wind and water,for a comfortable fit. 3 in 1 Detachable Design provide more convenience, you can separate the coat and inner as needed, or wear it together. It is suitable for different season and help you adapt to different climates"], ["price", "56.99"], ["created_at", "2024-06-09 01:07:06.072889"], ["updated_at", "2024-06-09 01:07:06.072889"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Lock and Love Women's Removable Hooded Faux Leather Moto Biker Jacket"], ["description", "100% POLYURETHANE(shell) 100% POLYESTER(lining) 75% POLYESTER 25% COTTON (SWEATER), Faux leather material for style and comfort / 2 pockets of front, 2-For-One Hooded denim style faux leather jacket, Button detail on waist / Detail stitching at sides, HAND WASH ONLY / DO NOT BLEACH / LINE DRY / DO NOT IRON"], ["price", "29.95"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Lock and Love Women's Removable Hooded Faux Leather Moto Biker Jacket"], ["description", "100% POLYURETHANE(shell) 100% POLYESTER(lining) 75% POLYESTER 25% COTTON (SWEATER), Faux leather material for style and comfort / 2 pockets of front, 2-For-One Hooded denim style faux leather jacket, Button detail on waist / Detail stitching at sides, HAND WASH ONLY / DO NOT BLEACH / LINE DRY / DO NOT IRON"], ["price", "29.95"], ["created_at", "2024-06-09 01:07:06.075844"], ["updated_at", "2024-06-09 01:07:06.075844"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Rain Jacket Women Windbreaker Striped Climbing Raincoats"], ["description", "Lightweight perfet for trip or casual wear---Long sleeve with hooded, adjustable drawstring waist design. Button and zipper front closure raincoat, fully stripes Lined and The Raincoat has 2 side pockets are a good size to hold all kinds of things, it covers the hips, and the hood is generous but doesn't overdo it.Attached Cotton Lined Hood with Adjustable Drawstrings give it a real styled look."], ["price", "39.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Rain Jacket Women Windbreaker Striped Climbing Raincoats"], ["description", "Lightweight perfet for trip or casual wear---Long sleeve with hooded, adjustable drawstring waist design. Button and zipper front closure raincoat, fully stripes Lined and The Raincoat has 2 side pockets are a good size to hold all kinds of things, it covers the hips, and the hood is generous but doesn't overdo it.Attached Cotton Lined Hood with Adjustable Drawstrings give it a real styled look."], ["price", "39.99"], ["created_at", "2024-06-09 01:07:06.078569"], ["updated_at", "2024-06-09 01:07:06.078569"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "MBJ Women's Solid Short Sleeve Boat Neck V "], ["description", "95% RAYON 5% SPANDEX, Made in USA or Imported, Do Not Bleach, Lightweight fabric with great stretch for comfort, Ribbed on sleeves and neckline / Double stitching on bottom hem"], ["price", "9.85"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (1.0ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "MBJ Women's Solid Short Sleeve Boat Neck V "], ["description", "95% RAYON 5% SPANDEX, Made in USA or Imported, Do Not Bleach, Lightweight fabric with great stretch for comfort, Ribbed on sleeves and neckline / Double stitching on bottom hem"], ["price", "9.85"], ["created_at", "2024-06-09 01:07:06.081454"], ["updated_at", "2024-06-09 01:07:06.081454"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "Opna Women's Short Sleeve Moisture"], ["description", "100% Polyester, Machine wash, 100% cationic polyester interlock, Machine Wash & Pre Shrunk for a Great Fit, Lightweight, roomy and highly breathable with moisture wicking fabric which helps to keep moisture away, Soft Lightweight Fabric with comfortable V-neck collar and a slimmer fit, delivers a sleek, more feminine silhouette and Added Comfort"], ["price", "7.95"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (0.9ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "Opna Women's Short Sleeve Moisture"], ["description", "100% Polyester, Machine wash, 100% cationic polyester interlock, Machine Wash & Pre Shrunk for a Great Fit, Lightweight, roomy and highly breathable with moisture wicking fabric which helps to keep moisture away, Soft Lightweight Fabric with comfortable V-neck collar and a slimmer fit, delivers a sleek, more feminine silhouette and Added Comfort"], ["price", "7.95"], ["created_at", "2024-06-09 01:07:06.084396"], ["updated_at", "2024-06-09 01:07:06.084396"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Load (0.2ms)[0m  [1m[34mSELECT "products".* FROM "products" WHERE "products"."name" = $1 AND "products"."description" = $2 AND "products"."price" = $3 LIMIT $4[0m  [["name", "DANVOUY Womens T Shirt Casual Cotton Short"], ["description", "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."], ["price", "12.99"], ["LIMIT", 1]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mProduct Create (1.8ms)[0m  [1m[32mINSERT INTO "products" ("name", "description", "price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "DANVOUY Womens T Shirt Casual Cotton Short"], ["description", "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."], ["price", "12.99"], ["created_at", "2024-06-09 01:07:06.087148"], ["updated_at", "2024-06-09 01:07:06.087148"]]
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ lib/tasks/sync_products.rake:8:in `block (3 levels) in <main>'
+Started GET "/" for ::1 at 2024-06-08 22:30:41 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (3.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  Rendered products/index.html.erb within layouts/application (Duration: 0.2ms | Allocations: 174)
+  Rendered layout layouts/application.html.erb (Duration: 5338.7ms | Allocations: 195856)
+Completed 200 OK in 5360ms (Views: 5344.2ms | ActiveRecord: 0.0ms | Allocations: 204897)
+
+
+Started GET "/" for ::1 at 2024-06-08 22:31:42 -0300
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  Rendered products/index.html.erb within layouts/application (Duration: 5.0ms | Allocations: 2919)
+  Rendered layout layouts/application.html.erb (Duration: 5.1ms | Allocations: 2995)
+Completed 500 Internal Server Error in 8ms (ActiveRecord: 0.0ms | Allocations: 4127)
+
+
+  
+ActionView::Template::Error (undefined method `each' for nil:NilClass):
+     9:     </tr>
+    10:   </thead>
+    11:   <tbody>
+    12:     <% @products.each do |product| %>
+    13:       <tr>
+    14:         <td><%= product.name %></td>
+    15:         <td><%= product.description %></td>
+  
+app/views/products/index.html.erb:12
+Started GET "/" for ::1 at 2024-06-08 22:32:07 -0300
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  [1m[36mProduct Load (1.7ms)[0m  [1m[34mSELECT "products".* FROM "products"[0m
+  ↳ app/views/products/index.html.erb:12
+  Rendered products/index.html.erb within layouts/application (Duration: 100.8ms | Allocations: 94947)
+  Rendered layout layouts/application.html.erb (Duration: 131.2ms | Allocations: 104130)
+Completed 200 OK in 150ms (Views: 96.6ms | ActiveRecord: 36.2ms | Allocations: 115994)
+
+
+Started GET "/discount_campaigns" for ::1 at 2024-06-08 22:32:13 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (2.8ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:15
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 5.2ms | Allocations: 1019)
+  Rendered layout layouts/application.html.erb (Duration: 18.5ms | Allocations: 9757)
+Completed 200 OK in 33ms (Views: 16.9ms | ActiveRecord: 2.8ms | Allocations: 12957)
+
+
+Started GET "/discount_histories" for ::1 at 2024-06-08 22:32:15 -0300
+  
+ActionController::RoutingError (uninitialized constant DiscountHistoriesController
+Did you mean?  DiscountHistory):
+  
+Started GET "/discount_histories" for ::1 at 2024-06-08 22:38:57 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (2.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 1 pending migration:
+
+db/migrate/20240609013622_create_discounts.rb
+
+
+):
+  
+activerecord (7.1.3.4) lib/active_record/migration.rb:755:in `check_pending_migrations'
+activerecord (7.1.3.4) lib/active_record/migration.rb:644:in `block (2 levels) in call'
+activesupport (7.1.3.4) lib/active_support/file_update_checker.rb:85:in `execute'
+activerecord (7.1.3.4) lib/active_record/migration.rb:649:in `block in call'
+activerecord (7.1.3.4) lib/active_record/migration.rb:641:in `synchronize'
+activerecord (7.1.3.4) lib/active_record/migration.rb:641:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+activesupport (7.1.3.4) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/debug_exceptions.rb:29:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (7.1.3.4) lib/rails/rack/logger.rb:37:in `call_app'
+railties (7.1.3.4) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (7.1.3.4) lib/active_support/tagged_logging.rb:135:in `block in tagged'
+activesupport (7.1.3.4) lib/active_support/tagged_logging.rb:39:in `tagged'
+activesupport (7.1.3.4) lib/active_support/tagged_logging.rb:135:in `tagged'
+activesupport (7.1.3.4) lib/active_support/broadcast_logger.rb:240:in `method_missing'
+railties (7.1.3.4) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.5.1) lib/sprockets/rails/quiet_assets.rb:17:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/remote_ip.rb:92:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/request_id.rb:28:in `call'
+rack (3.0.11) lib/rack/method_override.rb:28:in `call'
+rack (3.0.11) lib/rack/runtime.rb:24:in `call'
+activesupport (7.1.3.4) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/server_timing.rb:59:in `block in call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/server_timing.rb:24:in `collect_events'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/server_timing.rb:58:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/static.rb:25:in `call'
+rack (3.0.11) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.1.3.4) lib/action_dispatch/middleware/host_authorization.rb:141:in `call'
+railties (7.1.3.4) lib/rails/engine.rb:536:in `call'
+puma (6.4.2) lib/puma/configuration.rb:272:in `call'
+puma (6.4.2) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.2) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.2) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.2) lib/puma/server.rb:464:in `process_client'
+puma (6.4.2) lib/puma/server.rb:245:in `block in run'
+puma (6.4.2) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3155292796062269940)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (9.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+Migrating to CreateDiscounts (20240609013622)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (52.8ms)[0m  [1m[35mCREATE TABLE "discounts" ("id" bigserial primary key, "product_id" bigint NOT NULL, "discount_type" character varying, "discount_amount" decimal, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_d0493c5775"
+FOREIGN KEY ("product_id")
+  REFERENCES "products" ("id")
+)[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE INDEX "index_discounts_on_product_id" ON "discounts" ("product_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (2.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240609013622') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT pg_advisory_unlock(3155292796062269940)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/discount_histories" for ::1 at 2024-06-08 22:41:40 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (2.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [GET] "/discount_histories"):
+  
+Started GET "/" for ::1 at 2024-06-08 22:41:47 -0300
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  [1m[36mProduct Load (2.0ms)[0m  [1m[34mSELECT "products".* FROM "products"[0m
+  ↳ app/views/products/index.html.erb:12
+  Rendered products/index.html.erb within layouts/application (Duration: 103.7ms | Allocations: 94267)
+  Rendered layout layouts/application.html.erb (Duration: 172.6ms | Allocations: 136815)
+Completed 500 Internal Server Error in 209ms (ActiveRecord: 42.7ms | Allocations: 150321)
+
+
+  
+ActionView::Template::Error (undefined local variable or method `products_path' for #<ActionView::Base:0x0000000000d458>
+Did you mean?  @products):
+    17:     <div class="collapse navbar-collapse" id="navbarNav">
+    18:       <ul class="navbar-nav">
+    19:         <li class="nav-item">
+    20:           <%= link_to 'Products', products_path, class: 'nav-link' %>
+    21:         </li>
+    22:         <li class="nav-item">
+    23:           <%= link_to 'Discount Campaigns', discount_campaigns_path, class: 'nav-link' %>
+  
+app/views/layouts/application.html.erb:20
+Started GET "/" for ::1 at 2024-06-08 22:43:05 -0300
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  [1m[36mProduct Load (13.2ms)[0m  [1m[34mSELECT "products".* FROM "products"[0m
+  ↳ app/views/products/index.html.erb:12
+  Rendered products/index.html.erb within layouts/application (Duration: 30.5ms | Allocations: 6284)
+  Rendered layout layouts/application.html.erb (Duration: 42.9ms | Allocations: 15541)
+Completed 200 OK in 49ms (Views: 23.5ms | ActiveRecord: 21.4ms | Allocations: 17300)
+
+
+Started GET "/" for ::1 at 2024-06-08 22:48:25 -0300
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /Users/lucasmoura/.asdf/installs/ruby/3.0.0/lib/ruby/gems/3.0.0/gems/railties-7.1.3.4/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /Users/lucasmoura/.asdf/installs/ruby/3.0.0/lib/ruby/gems/3.0.0/gems/railties-7.1.3.4/lib/rails/templates/rails/welcome/index.html.erb (Duration: 1.0ms | Allocations: 454)
+Completed 200 OK in 3ms (Views: 1.7ms | ActiveRecord: 0.0ms | Allocations: 1476)
+
+
+Started GET "/" for ::1 at 2024-06-08 22:49:14 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (17.3ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 20.6ms | Allocations: 945)
+  Rendered layout layouts/application.html.erb (Duration: 44.8ms | Allocations: 14233)
+Completed 500 Internal Server Error in 57ms (ActiveRecord: 17.3ms | Allocations: 18075)
+
+
+  
+ActionView::Template::Error (undefined local variable or method `products_path' for #<ActionView::Base:0x00000000018880>):
+    17:     <div class="collapse navbar-collapse" id="navbarNav">
+    18:       <ul class="navbar-nav">
+    19:         <li class="nav-item">
+    20:           <%= link_to 'Products', products_path, class: 'nav-link' %>
+    21:         </li>
+    22:         <li class="nav-item">
+    23:           <%= link_to 'Discount Campaigns', discount_campaigns_path, class: 'nav-link' %>
+  
+app/views/layouts/application.html.erb:20
+Started GET "/" for ::1 at 2024-06-08 22:50:55 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (2.6ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 4.6ms | Allocations: 924)
+  Rendered layout layouts/application.html.erb (Duration: 29.9ms | Allocations: 14488)
+Completed 500 Internal Server Error in 38ms (ActiveRecord: 2.5ms | Allocations: 17644)
+
+
+  
+ActionView::Template::Error (undefined local variable or method `discount_histories_path' for #<ActionView::Base:0x0000000001c6b0>
+Did you mean?  discounts_create_path):
+    23:           <%= link_to 'Discount Campaigns', discount_campaigns_path, class: 'nav-link' %>
+    24:         </li>
+    25:         <li class="nav-item">
+    26:           <%= link_to 'Discount History', discount_histories_path, class: 'nav-link' %>
+    27:         </li>
+    28:       </ul>
+    29:     </div>
+  
+app/views/layouts/application.html.erb:26
+Started GET "/" for ::1 at 2024-06-08 22:51:21 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (0.7ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 2.4ms | Allocations: 928)
+  Rendered layout layouts/application.html.erb (Duration: 10.7ms | Allocations: 10150)
+Completed 200 OK in 16ms (Views: 11.7ms | ActiveRecord: 0.7ms | Allocations: 13325)
+
+
+Started GET "/api/v1/products" for ::1 at 2024-06-08 22:53:55 -0300
+Processing by Api::V1::ProductsController#index as HTML
+  [1m[36mProduct Load (3.3ms)[0m  [1m[34mSELECT "products".* FROM "products"[0m
+  ↳ app/controllers/api/v1/products_controller.rb:4:in `index'
+Completed 200 OK in 49ms (Views: 16.9ms | ActiveRecord: 24.7ms | Allocations: 5633)
+
+
+Started GET "/" for ::1 at 2024-06-08 22:57:47 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (4.8ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 17.2ms | Allocations: 551)
+  Rendered layout layouts/application.html.erb (Duration: 40.5ms | Allocations: 9303)
+Completed 200 OK in 52ms (Views: 41.9ms | ActiveRecord: 4.7ms | Allocations: 9615)
+
+
+Started GET "/discount_histories" for ::1 at 2024-06-08 22:57:51 -0300
+  
+ActionController::RoutingError (uninitialized constant DiscountHistoriesController
+Did you mean?  DiscountsController):
+  
+Started GET "/discount_campaigns" for ::1 at 2024-06-08 22:57:53 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (2.3ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 5.7ms | Allocations: 550)
+  Rendered layout layouts/application.html.erb (Duration: 27.4ms | Allocations: 9299)
+Completed 200 OK in 31ms (Views: 26.5ms | ActiveRecord: 2.3ms | Allocations: 9614)
+
+
+Started GET "/products" for ::1 at 2024-06-08 22:57:54 -0300
+Processing by ProductsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering products/index.html.erb within layouts/application
+  [1m[36mProduct Load (0.8ms)[0m  [1m[34mSELECT "products".* FROM "products"[0m
+  ↳ app/views/products/index.html.erb:12
+  Rendered products/index.html.erb within layouts/application (Duration: 8.9ms | Allocations: 3280)
+  Rendered layout layouts/application.html.erb (Duration: 22.3ms | Allocations: 12021)
+Completed 200 OK in 26ms (Views: 23.3ms | ActiveRecord: 0.8ms | Allocations: 12491)
+
+
+Started GET "/discount_campaigns" for ::1 at 2024-06-08 22:57:56 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (1.1ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 4.2ms | Allocations: 556)
+  Rendered layout layouts/application.html.erb (Duration: 24.2ms | Allocations: 9306)
+Completed 200 OK in 27ms (Views: 24.4ms | ActiveRecord: 1.1ms | Allocations: 9621)
+
+
+Started GET "/discounts" for ::1 at 2024-06-08 22:58:04 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/discounts"):
+  
+Started GET "/discount_campaigns" for ::1 at 2024-06-08 23:01:19 -0300
+Processing by DiscountCampaignsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering discount_campaigns/index.html.erb within layouts/application
+  [1m[36mDiscountCampaign Load (1.6ms)[0m  [1m[34mSELECT "discount_campaigns".* FROM "discount_campaigns"[0m
+  ↳ app/views/discount_campaigns/index.html.erb:16
+  Rendered discount_campaigns/index.html.erb within layouts/application (Duration: 4.3ms | Allocations: 924)
+  Rendered layout layouts/application.html.erb (Duration: 15.2ms | Allocations: 10182)
+Completed 200 OK in 22ms (Views: 15.4ms | ActiveRecord: 1.6ms | Allocations: 13357)
+
+
+Started GET "/discounts" for ::1 at 2024-06-08 23:01:21 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/discounts"):
+  
